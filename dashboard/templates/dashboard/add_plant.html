@@ -1,0 +1,51 @@
+{% extends "global/base.html" %}
+
+{% block title %}Mes plantes - GreenCheck{% endblock %}
+
+{% block content %}
+
+<div class="form-container form-narrow">
+    <h2 style="text-align: center;">Ajouter une plante</h2>
+
+    <form method="POST" action="{% url 'dashboard:add_plant' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="name">Nom de la plante</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="plant_type">Type de plante</label>
+            <input type="text" id="plant_type" name="plant_type" required>
+        </div>
+
+        <div class="form-group">
+            <label for="exposure">Exposition</label>
+                <select id="exposure" name="exposure" required>
+                    <option value="">-- Choisir --</option>
+                    {% for exposure in exposures %}
+                        <option value="{{ exposure.id }}">{{ exposure.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        <div class="form-group">
+            <label for="exposure">Localisation</label>
+                <select id="location" name="location" required>
+                    <option value="">-- Choisir --</option>
+                    {% for location in locations %}
+                        <option value="{{ location.id }}">{{ location.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Ajouter</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 1rem;">
+            <a href="{% url 'dashboard:dashboard' %}">Retour au tableau de bord</a>
+        </p>
+    </div>
+
+{% endblock %}

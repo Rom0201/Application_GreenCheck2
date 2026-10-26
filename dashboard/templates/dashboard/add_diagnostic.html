@@ -1,0 +1,75 @@
+{% extends "global/base.html" %}
+
+{% block title %}Analyser une plante - GreenCheck{% endblock %}
+
+{% block content %}
+
+<div class="upload-page">
+    <h2>Analyser une plante</h2>
+    <p class="upload-subtitle">Prenez en photo une feuille de votre plante, seule, sur un fond clair et uni, en lumière naturelle.</p>
+    <p class="upload-subtitle">Plante : <strong>{{ plant.name }}</strong></p>
+
+    <form method="POST" action="{% url 'dashboard:add_diagnostic' plant.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="dropzone" id="dropzone">
+            <input type="file" id="image" name="image" class="dropzone-input"
+                   accept=".jpg,.jpeg,.png" required
+                   aria-label="Choisir une photo de feuille (JPG ou PNG, 5 Mo maximum)">
+
+            <svg class="dropzone-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 16V4"></path>
+                <path d="M7 9l5-5 5 5"></path>
+                <path d="M4 20h16"></path>
+            </svg>
+
+            <p class="dropzone-title">Glissez-déposez une photo de feuille ici</p>
+            <p class="dropzone-or">ou</p>
+            <span class="btn btn-outline">Choisir un fichier</span>
+
+            <img id="preview" class="dropzone-preview" alt="Aperçu de la photo choisie" hidden>
+            <p id="file-name" class="dropzone-file" aria-live="polite"></p>
+        </div>
+
+        <p class="upload-hint">Formats acceptés : JPG, PNG — taille maximale : 5 Mo</p>
+
+        <div class="upload-actions">
+            <button type="submit" class="btn btn-primary">Analyser</button>
+        </div>
+    </form>
+
+    <p class="upload-back">
+        <a href="{% url 'dashboard:dashboard' %}">Retour au tableau de bord</a>
+    </p>
+</div>
+
+<script>
+    // Aperçu de la photo choisie et effet visuel pendant le glisser-déposer
+    (function () {
+        var zone = document.getElementById('dropzone');
+        var input = document.getElementById('image');
+        var preview = document.getElementById('preview');
+        var fileName = document.getElementById('file-name');
+
+        input.addEventListener('change', function () {
+            var file = input.files[0];
+            if (!file) {
+                preview.hidden = true;
+                fileName.textContent = '';
+                return;
+            }
+            fileName.textContent = file.name;
+            preview.src = URL.createObjectURL(file);
+            preview.hidden = false;
+        });
+
+        ['dragenter', 'dragover'].forEach(function (evt) {
+            zone.addEventListener(evt, function () { zone.classList.add('dropzone-active'); });
+        });
+        ['dragleave', 'drop'].forEach(function (evt) {
+            zone.addEventListener(evt, function () { zone.classList.remove('dropzone-active'); });
+        });
+    })();
+</script>
+
+{% endblock %}

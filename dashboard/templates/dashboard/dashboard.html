@@ -1,0 +1,64 @@
+{% extends "global/base.html" %}
+
+{% block title %}Mes plantes - GreenCheck{% endblock %}
+
+{% block content %}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h2>Mes plantes</h2>
+    <div>
+        <a href="{% url 'dashboard:add_plant' %}" class="btn btn-primary">+ Ajouter une plante</a>
+        <a href="{% url 'logout' %}" class="btn btn-outline">Se déconnecter</a>
+    </div>
+</div>
+
+{% if plants %}
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Exposition</th>
+            <th>Localisation</th>
+            <th>Dernier diagnostic</th>
+            <th>État</th>
+            <th>Actions</th>
+            <th>Supprimer</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for plant in plants %}
+        <tr>
+            <td>{{ plant.name }}</td>
+            <td>{{ plant.exposure }}</td>
+            <td>{{ plant.location }}</td>
+            <td>{{ plant.last_diagnostic_date|date:"d/m/Y"|default:"Aucun" }}</td>
+            <td>
+                {% if plant.status == 'healthy' %}
+                <span class="badge badge-healthy">Saine</span>
+                {% elif plant.status == 'warning' %}
+                <span class="badge badge-warning">À surveiller</span>
+                {% else %}
+                <span class="badge badge-danger">En danger</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'dashboard:add_diagnostic' plant.id %}" class="btn btn-outline">Diagnostiquer</a>
+                <a href="{% url 'dashboard:plant_history' plant.id %}" class="btn btn-outline">Historique</a>
+            </td>
+           <td>
+    <form method="POST" action="{% url 'dashboard:delete_plant' plant.id %}" onsubmit="return confirm('Supprimer {{ plant.name|escapejs }} et tous ses diagnostics ?');">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+    </form>
+</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="card" style="text-align: center;">
+    <p>Vous n'avez pas encore ajouté de plante.</p>
+</div>
+{% endif %}
+
+{% endblock %}

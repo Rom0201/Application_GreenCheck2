@@ -1,0 +1,16 @@
+# Identifiants et configuration locale
+.env
+
+# Environnements virtuels
+.venv/
+ai_service/.venv/
+
+# Photos envoyées par les utilisateurs (RGPD)
+media/
+
+# Fichiers générés
+__pycache__/
+*.pyc
+db.sqlite3
+.DS_Store
+.vscode/

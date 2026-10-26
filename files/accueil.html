@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - GreenCheck{% endblock %}
+
+{% block content %}
+
+<section class="form-container" style="max-width: 700px; text-align: center;">
+    <h1>🌿 Bienvenue sur GreenCheck</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">
+        Diagnostiquez la santé de vos plantes en quelques clics : exposition,
+        arrosage, symptômes... GreenCheck vous aide à comprendre ce dont vos
+        plantes ont besoin.
+    </p>
+
+    {% if session.get('user_id') %}
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Voir mes plantes</a>
+    {% else %}
+        <a href="{{ url_for('register') }}" class="btn btn-primary">Commencer</a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline">Se connecter</a>
+    {% endif %}
+</section>
+
+<section class="card-grid" style="margin-top: 2rem;">
+    <div class="card">
+        <h3>🔍 Diagnostic</h3>
+        <p>Renseignez les symptômes et l'exposition de votre plante pour obtenir un diagnostic.</p>
+    </div>
+    <div class="card">
+        <h3>📋 Historique</h3>
+        <p>Retrouvez tous vos diagnostics précédents classés par plante.</p>
+    </div>
+    <div class="card">
+        <h3>🌤️ Exposition</h3>
+        <p>Suivez les conditions de lumière et de localisation de chaque plante.</p>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "global/base.html" %}
+
+{% block title %}Historique - {{ plant.name }} - GreenCheck{% endblock %}
+
+{% block content %}
+
+<div class="result-page">
+    <h2>Résultat du diagnostic : {{ plant.name }}</h2>
+
+    {% for d in diagnostics %}
+    <div class="card">
+        <div class="result-top">
+            <img class="result-photo" src="{{ d.image.url }}" alt="Photo de {{ plant.name }} du {{ d.created_at|date:'d/m/Y' }}">
+
+            <div class="result-info">
+                {% if d.result %}
+                    <p class="result-label">État de la plante</p>
+                    <p>
+                        {% if d.result|lower == 'sain' %}
+                            <span class="badge badge-healthy">Plante saine</span>
+                        {% else %}
+                            <span class="badge badge-danger">Plante malade</span>
+                        {% endif %}
+                    </p>
+
+                    {% if d.result|lower != 'sain' %}
+                        <p class="result-label">Maladie détectée</p>
+                        <p class="result-value">{{ d.result }}</p>
+                    {% endif %}
+
+                    {% if d.percent %}
+                        <p class="result-label">Taux de confiance</p>
+                        <div class="confidence">
+                            <div class="confidence-bar" role="progressbar" aria-label="Taux de confiance" aria-valuenow="{{ d.percent }}" aria-valuemin="0" aria-valuemax="100">
+                                <div class="confidence-fill" style="width: {{ d.percent }}%;"></div>
+                            </div>
+                            <strong>{{ d.percent }} %</strong>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <p>L'analyse n'est pas disponible pour cette photo.</p>
+                {% endif %}
+
+                <p class="result-label">Date : {{ d.created_at|date:"d/m/Y" }}</p>
+            </div>
+        </div>
+
+        {% if d.advice %}
+        <div class="result-advice">
+            <h3>Conseils d'entretien</h3>
+            <p>{{ d.advice }}</p>
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="card" style="text-align: center;">
+        <p>Aucun diagnostic pour cette plante.</p>
+    </div>
+    {% endfor %}
+
+    <div class="result-actions">
+        <a href="{% url 'dashboard:add_diagnostic' plant.id %}" class="btn btn-primary">Nouvelle analyse</a>
+        <a href="{% url 'dashboard:dashboard' %}" class="btn btn-outline">Retour au tableau de bord</a>
+    </div>
+</div>
+
+{% endblock %}
